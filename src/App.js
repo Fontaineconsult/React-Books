@@ -5,6 +5,12 @@ import BookComponent from './components/BookComponent'
 import CurrentlyReading from './components/Reading'
 import HaveRead from './components/HaveRead'
 import WantToRead from './components/WantToRead'
+import SearchBar from './components/SearchComponent'
+import SearchView from './components/SearchResultViewComponent'
+
+
+
+
 
 class BooksApp extends React.Component {
     constructor(props){
@@ -16,33 +22,38 @@ class BooksApp extends React.Component {
             books: [],
             showSearchPage: false
         };
+
         this.changeShelf = (event) => {
 
             event.preventDefault();
-            console.log(event.target)
+
             let CurrentShelf = event.target[0].value;
             let ShelfToMoveTo = event.target[1].value;
             let BookID = event.target[2].value;
 
-
-            console.log(CurrentShelf, ShelfToMoveTo, BookID)
-
             let CurrentBook = this.state.books.filter(function(el) {return el.id === BookID})
-            CurrentBook[0].id = ShelfToMoveTo;
-            console.log("CURRENT BOOK", CurrentBook[0].shelf)
 
+            CurrentBook[0].shelf = ShelfToMoveTo;
 
-            this.setState(prevState => ({
+            if (CurrentShelf !== ShelfToMoveTo) {
+                BooksAPI.update(CurrentBook[0], ShelfToMoveTo);
+                this.setState(prevState => ({
 
-                [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]],
-                [CurrentShelf]: prevState[CurrentShelf].filter(function(book) {return book.id !== BookID})
+                    [CurrentShelf]: prevState[CurrentShelf].filter(book => {return book.id !== BookID}),
+                    [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]],
 
-            }));
-
-            console.log(ShelfToMoveTo)
+                }));
+            }
 
         }
 
+        this.searchBooks = (event, state) => {
+
+            this.setState({
+                showSearchPage: state
+            })
+
+        }
 
     }
 
@@ -60,16 +71,28 @@ class BooksApp extends React.Component {
 
 
   render() {
-    console.log(this.state.books)
+
     return (
 
       <div className="app">
-          <CurrentlyReading changeShelf={this.changeShelf}
-                            books={this.state.currentlyReading}/>
-          <HaveRead changeShelf={this.changeShelf}
-                    books={this.state.read}/>
-          <WantToRead changeShelf={this.changeShelf}
-                      books={this.state.wantToRead} />
+          <SearchBar searchBooks={this.searchBooks}/>
+          {this.state.showSearchPage === true && (
+              <div>
+                  <SearchView/>
+              </div>
+          )}
+
+          {this.state.showSearchPage === false && (
+              <div>
+                  <CurrentlyReading changeShelf={this.changeShelf}
+                                    books={this.state.currentlyReading}/>
+                  <HaveRead changeShelf={this.changeShelf}
+                            books={this.state.read}/>
+                  <WantToRead changeShelf={this.changeShelf}
+                              books={this.state.wantToRead} />
+              </div>
+          )}
+
 
       </div>
     )
