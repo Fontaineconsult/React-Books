@@ -12,6 +12,7 @@ class HaveRead extends React.Component {
                 {this.props.books.map((book) => (<BookComponent
                     changeShelf={this.props.changeShelf}
                     book={book}
+                    searchMode={this.props.searchMode}
                     />))}
             </div>
 

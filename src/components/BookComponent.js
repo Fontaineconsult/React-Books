@@ -1,4 +1,6 @@
 import React from 'react'
+import ChangeShelf from './ChangeShelfComponent'
+import AddToShelf from './AddToShelfComponent'
 
 class BookComponent extends React.Component {
     constructor(props) {
@@ -9,29 +11,16 @@ class BookComponent extends React.Component {
     render() {
 
             return(
-
             <div>
-
                 {this.props.book.title}
+                {this.props.searchMode === false && (
+                    <ChangeShelf book={this.props.book} changeShelf={this.props.changeShelf} />
+                    )}
 
-                <form onSubmit={this.props.changeShelf}>
-                        <input name="CurShelf" type="hidden" value={this.props.book.shelf}/>
-                        <input name="ToShelf" type="hidden" value={"currentlyReading"}/>
-                        <input name="BookID" type="hidden" value={this.props.book.id}/>
-                        <button>Currently Reading</button>
-                </form>
-                <form onSubmit={this.props.changeShelf}>
-                        <input name="CurShelf" type="hidden" value={this.props.book.shelf}/>
-                        <input name="ToShelf" type="hidden" value={"read"}/>
-                        <input name="BookID" type="hidden" value={this.props.book.id}/>
-                        <button>Have Read Already</button>
-                </form>
-                <form onSubmit={this.props.changeShelf}>
-                        <input name="CurShelf" type="hidden" value={this.props.book.shelf}/>
-                        <input name="ToShelf" type="hidden" value={"wantToRead"}/>
-                        <input name="BookID" type="hidden" value={this.props.book.id}/>
-                        <button>Want To Read It</button>
-                </form>
+                {this.props.searchMode === true && (
+                    <AddToShelf book={this.props.book} addToShelf={this.props.addToShelf} />
+
+                )}
 
             </div>
 

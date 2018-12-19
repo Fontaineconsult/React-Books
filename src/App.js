@@ -20,7 +20,9 @@ class BooksApp extends React.Component {
             wantToRead: [],
             read: [],
             books: [],
-            showSearchPage: false
+            showSearchPage: false,
+            currentInputFieldValue: '',
+            searchQuery: []
         };
 
         this.changeShelf = (event) => {
@@ -31,7 +33,7 @@ class BooksApp extends React.Component {
             let ShelfToMoveTo = event.target[1].value;
             let BookID = event.target[2].value;
 
-            let CurrentBook = this.state.books.filter(function(el) {return el.id === BookID})
+            let CurrentBook = this.state.books.filter(function(el) {return el.id === BookID});
 
             CurrentBook[0].shelf = ShelfToMoveTo;
 
@@ -45,19 +47,47 @@ class BooksApp extends React.Component {
                 }));
             }
 
+        };
+
+        this.addToShelf = (event) => {
+            event.preventDefault();
+
+            let ShelfToMoveTo = event.target[0].value;
+            let BookID = event.target[1].value;
+
+            let CurrentBook = this.state.searchQuery.filter(function(el) {return el.id === BookID});
+            Object.assign(CurrentBook[0], {shelf: ShelfToMoveTo});
+
+            this.setState(prevState => ({
+                books: [...prevState.books, CurrentBook[0]],
+                [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]]
+            }));
+            BooksAPI.update(CurrentBook[0], ShelfToMoveTo);
+
+
+
+
+
+        };
+
+        this.searchBooks = (string) => {
+
+            if (string.length > 0){
+                this.setState({
+                    showSearchPage: true,
+                    currentInputFieldValue: string
+                })
+            }
+            if (string.length === 0){
+                this.setState({
+                    showSearchPage: false,
+                    currentInputFieldValue: ''
+                })
+            }
         }
-
-        this.searchBooks = (event, state) => {
-
-            this.setState({
-                showSearchPage: state
-            })
-
-        }
-
     }
 
-  componentDidMount() {
+  componentWillMount() {
 
       BooksAPI.getAll().then((books) => this.setState({
           books: books,
@@ -67,7 +97,19 @@ class BooksApp extends React.Component {
       }))
 
   }
+  componentDidUpdate(nextProps, prevState) {
 
+        if (this.state.currentInputFieldValue.length > 0) {
+            if (this.state.currentInputFieldValue !== prevState.currentInputFieldValue) {
+
+                BooksAPI.search(this.state.currentInputFieldValue).then(results => this.setState({
+                    searchQuery: results
+                }))
+            }
+        }
+
+
+  }
 
 
   render() {
@@ -78,18 +120,29 @@ class BooksApp extends React.Component {
           <SearchBar searchBooks={this.searchBooks}/>
           {this.state.showSearchPage === true && (
               <div>
-                  <SearchView/>
+                  <SearchView
+                              books={this.state.searchQuery}
+                              addToShelf={this.addToShelf}
+                              searchMode={this.state.showSearchPage}
+                  />
               </div>
           )}
 
           {this.state.showSearchPage === false && (
+
               <div>
                   <CurrentlyReading changeShelf={this.changeShelf}
-                                    books={this.state.currentlyReading}/>
+                                    books={this.state.currentlyReading}
+                                    searchMode={this.state.showSearchPage}
+                  />
                   <HaveRead changeShelf={this.changeShelf}
-                            books={this.state.read}/>
+                            books={this.state.read}
+                            searchMode={this.state.showSearchPage}
+                  />
                   <WantToRead changeShelf={this.changeShelf}
-                              books={this.state.wantToRead} />
+                              books={this.state.wantToRead}
+                              searchMode={this.state.showSearchPage}
+                  />
               </div>
           )}
 
