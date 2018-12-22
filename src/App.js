@@ -7,9 +7,10 @@ import HaveRead from './components/HaveRead'
 import WantToRead from './components/WantToRead'
 import SearchBar from './components/SearchComponent'
 import SearchView from './components/SearchResultViewComponent'
-
-
-
+import { Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
+import MainShelf from './components/mainShelfComponent'
+import { Router, Redirect } from 'react-router-dom'
 
 
 class BooksApp extends React.Component {
@@ -71,20 +72,34 @@ class BooksApp extends React.Component {
         };
 
         this.searchBooks = (string) => {
+            console.log(string, string.length);
 
             if (string.length > 0){
+
                 this.setState({
                     showSearchPage: true,
                     currentInputFieldValue: string
                 })
             }
             if (string.length === 0){
+
                 this.setState({
                     showSearchPage: false,
-                    currentInputFieldValue: ''
+                    currentInputFieldValue: string,
+                    searchQuery: []
                 })
             }
+        };
+
+        this.searchPageToggle = () => {
+
+            this.setState(prevState => ({
+                showSearchPage: !prevState.showSearchPage,
+
+            }))
+
         }
+
     }
 
   componentWillMount() {
@@ -101,54 +116,47 @@ class BooksApp extends React.Component {
 
         if (this.state.currentInputFieldValue.length > 0) {
             if (this.state.currentInputFieldValue !== prevState.currentInputFieldValue) {
-
                 BooksAPI.search(this.state.currentInputFieldValue).then(results => this.setState({
                     searchQuery: results
+
                 }))
             }
         }
+
 
 
   }
 
 
   render() {
-
+    console.log(this.state.showSearchPage)
     return (
 
       <div className="app">
-          <SearchBar searchBooks={this.searchBooks}/>
-          {this.state.showSearchPage === true && (
-              <div>
-                  <SearchView
-                              books={this.state.searchQuery}
-                              addToShelf={this.addToShelf}
-                              searchMode={this.state.showSearchPage}
-                  />
-              </div>
-          )}
 
-          {this.state.showSearchPage === false && (
+          <SearchBar searchBooks={this.searchBooks} fieldValue={this.props.currentInputFieldValue}/>
 
-              <div>
-                  <CurrentlyReading changeShelf={this.changeShelf}
-                                    books={this.state.currentlyReading}
-                                    searchMode={this.state.showSearchPage}
-                  />
-                  <HaveRead changeShelf={this.changeShelf}
-                            books={this.state.read}
-                            searchMode={this.state.showSearchPage}
-                  />
-                  <WantToRead changeShelf={this.changeShelf}
-                              books={this.state.wantToRead}
-                              searchMode={this.state.showSearchPage}
-                  />
-              </div>
-          )}
+
+          <Route exact path='/' render={() => (<MainShelf changeShelf={this.changeShelf}
+                                                   searchmode={this.state.showSearchPage}
+                                                   CurBooks={this.state.currentlyReading}
+                                                   HaveBooks={this.state.read}
+                                                   WantBooks={this.state.wantToRead}
+                                                   searchPageToggle={this.searchPageToggle}
+          />)}/>
+          <Route path='/search' render={() => (<SearchView
+              books={this.state.searchQuery}
+              addToShelf={this.addToShelf}
+              searchMode={this.state.showSearchPage}
+              onNavigate={this.searchPageToggle}
+              searchPageToggle={this.searchPageToggle}
+          />)}/>
+
 
 
       </div>
     )
+
   }
 }
 

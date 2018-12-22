@@ -8,7 +8,7 @@ class WantToRead extends React.Component {
         return(
             <div>
                 <b>Want To Read It</b>
-            {this.props.books.map((book) => <BookComponent
+            {this.props.WantBooks.map((book) => <BookComponent
                 changeShelf={this.props.changeShelf}
                 book={book}
                 searchMode={this.props.searchMode}

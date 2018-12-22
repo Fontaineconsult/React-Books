@@ -5,7 +5,7 @@ class CurrentlyReading extends React.Component {
     render(){
         return(
             <div><b>currently reading</b>
-                {this.props.books.map((book) => <BookComponent
+                {this.props.curbooks.map((book) => <BookComponent
                     changeShelf={this.props.changeShelf}
                     book={book}
                     searchMode={this.props.searchMode}

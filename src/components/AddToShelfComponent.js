@@ -7,7 +7,7 @@ class AddToShelf extends React.Component {
         return(
 
             <div>
-
+                <span>Add To My Shelf</span>
                 <form onSubmit={this.props.addToShelf}>
                     <input name="ToShelf" type="hidden" value={"currentlyReading"}/>
                     <input name="BookID" type="hidden" value={this.props.book.id}/>

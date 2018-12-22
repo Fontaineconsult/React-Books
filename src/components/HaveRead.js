@@ -9,7 +9,7 @@ class HaveRead extends React.Component {
             <div>
                 <b>Have Read Already</b>
 
-                {this.props.books.map((book) => (<BookComponent
+                {this.props.HaveBooks.map((book) => (<BookComponent
                     changeShelf={this.props.changeShelf}
                     book={book}
                     searchMode={this.props.searchMode}
