@@ -11,16 +11,15 @@ class SearchBar extends React.Component {
     };
 
 
-
     render() {
         return(
-            <div>
-
+            <div className="search-books-input-wrapper">
                 <form>
-                <input onChange={this.inputRegister.bind(this)} value={this.props.currentInputFieldValue} type="text">
+                <input placeholder="Search by title or author" className="search-books-bar" onChange={this.inputRegister.bind(this)} value={this.props.currentInputFieldValue} type="text">
                 </input>
                 </form>
             </div>
+
         )}
 }
 

@@ -6,13 +6,17 @@ import BookComponent from "./BookComponent";
 class WantToRead extends React.Component {
     render(){
         return(
-            <div>
-                <b>Want To Read It</b>
-            {this.props.WantBooks.map((book) => <BookComponent
-                changeShelf={this.props.changeShelf}
-                book={book}
-                searchMode={this.props.searchMode}
-                />)}
+            <div className="bookshelf">
+                <div className="bookshelf-title"><h1>Want to read</h1></div>
+                <div className="bookshelf-books">
+                    <ol className="books-grid">
+                {this.props.WantBooks.map((book) => <BookComponent
+                    changeShelf={this.props.changeShelf}
+                    book={book}
+                    searchMode={this.props.searchMode}
+                    />)}
+                    </ol>
+                </div>
             </div>
         )
 

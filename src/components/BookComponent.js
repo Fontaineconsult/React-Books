@@ -5,31 +5,42 @@ import AddToShelf from './AddToShelfComponent'
 class BookComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            showChanger: false
+        }
 
+        this.showOrHideChanger = () => {
+            this.setState(prevState => ({
+                showChanger: !prevState.showChanger,
+
+            }))
+
+
+        }
     }
 
     render() {
             console.log(this.props)
             return(
-            <div>
-                {this.props.book.title}
+                <li>
+                    <div className="book">
+                        <div className="book-top">
 
+                            {this.props.book.imageLinks !== undefined && (<img className="book-cover" alt="Small Thumb" src={this.props.book.imageLinks.thumbnail}/>)}
+                            {this.props.searchMode === false && this.state.showChanger === true && (
+                                <ChangeShelf book={this.props.book} changeShelf={this.props.changeShelf} showOrHide={this.showOrHideChanger}/>
+                            )}
+                            {this.props.searchMode === true && this.state.showChanger === true && (
+                                <AddToShelf book={this.props.book} addToShelf={this.props.addToShelf} showOrHide={this.showOrHideChanger}/>
+                            )}
 
+                            <div onMouseEnter={this.showOrHideChanger} className="book-shelf-changer"/>
+                        </div>
+                        <div className="book-title">{this.props.book.title}</div>
+                        {this.props.book.authors !== undefined && (this.props.book.authors.map((author) => (<div className="book-authors">{author}</div>)))}
 
-                {this.props.book.authors.length !== undefined && (this.props.book.authors.map((author) => (<span>{author}</span>)))}
-
-                <img alt="Small Thumb" src={this.props.book.imageLinks.thumbnail}/>
-
-                {this.props.searchMode === false && (
-                    <ChangeShelf book={this.props.book} changeShelf={this.props.changeShelf} />
-                    )}
-
-                {this.props.searchMode === true && (
-                    <AddToShelf book={this.props.book} addToShelf={this.props.addToShelf} />
-
-                )}
-
-            </div>
+                    </div>
+                </li>
 
         )}
 

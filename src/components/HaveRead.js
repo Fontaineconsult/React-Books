@@ -5,15 +5,18 @@ class HaveRead extends React.Component {
     render(){
         console.log("HAVEREADPROPS", this.props)
         return(
+            <div className="bookshelf">
+                <div className="bookshelf-title"><h1>Already Read</h1></div>
+                <div className="bookshelf-books">
 
-            <div>
-                <b>Have Read Already</b>
-
-                {this.props.HaveBooks.map((book) => (<BookComponent
-                    changeShelf={this.props.changeShelf}
-                    book={book}
-                    searchMode={this.props.searchMode}
-                    />))}
+                    <ol className="books-grid">
+                    {this.props.HaveBooks.map((book) => (<BookComponent
+                        changeShelf={this.props.changeShelf}
+                        book={book}
+                        searchMode={this.props.searchMode}
+                        />))}
+                    </ol>
+                </div>
             </div>
 
         )

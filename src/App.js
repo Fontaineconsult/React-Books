@@ -1,16 +1,10 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
-import BookComponent from './components/BookComponent'
-import CurrentlyReading from './components/Reading'
-import HaveRead from './components/HaveRead'
-import WantToRead from './components/WantToRead'
-import SearchBar from './components/SearchComponent'
 import SearchView from './components/SearchResultViewComponent'
-import { Link } from 'react-router-dom'
 import { Route } from 'react-router-dom'
 import MainShelf from './components/mainShelfComponent'
-import { Router, Redirect } from 'react-router-dom'
+
 
 
 class BooksApp extends React.Component {
@@ -33,7 +27,6 @@ class BooksApp extends React.Component {
             let CurrentShelf = event.target[0].value;
             let ShelfToMoveTo = event.target[1].value;
             let BookID = event.target[2].value;
-
             let CurrentBook = this.state.books.filter(function(el) {return el.id === BookID});
 
             CurrentBook[0].shelf = ShelfToMoveTo;
@@ -57,13 +50,20 @@ class BooksApp extends React.Component {
             let BookID = event.target[1].value;
 
             let CurrentBook = this.state.searchQuery.filter(function(el) {return el.id === BookID});
-            Object.assign(CurrentBook[0], {shelf: ShelfToMoveTo});
 
-            this.setState(prevState => ({
-                books: [...prevState.books, CurrentBook[0]],
-                [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]]
-            }));
-            BooksAPI.update(CurrentBook[0], ShelfToMoveTo);
+            let doesBookExist = this.state.books.find(function(CurrentBook) {return CurrentBook.id === BookID});
+
+            if (doesBookExist === undefined) {
+                Object.assign(CurrentBook[0], {shelf: ShelfToMoveTo});
+                this.setState(prevState => ({
+                    books: [...prevState.books, CurrentBook[0]],
+                    [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]]
+                }));
+                BooksAPI.update(CurrentBook[0], ShelfToMoveTo);
+
+            }
+
+
 
 
 
@@ -90,7 +90,11 @@ class BooksApp extends React.Component {
                 })
             }
         };
-
+        this.clearSearchResults = () => {
+            this.setState({
+                searchQuery: []
+            })
+        }
         this.searchPageToggle = () => {
 
             this.setState(prevState => ({
@@ -103,7 +107,7 @@ class BooksApp extends React.Component {
     }
 
   componentWillMount() {
-
+      console.log("GettingBooks")
       BooksAPI.getAll().then((books) => this.setState({
           books: books,
           currentlyReading: books.filter(function(el) {return el.shelf === "currentlyReading"}),
@@ -112,8 +116,9 @@ class BooksApp extends React.Component {
       }))
 
   }
-  componentDidUpdate(nextProps, prevState) {
 
+  componentDidUpdate(nextProps, prevState) {
+        console.log(this.state.currentInputFieldValue)
         if (this.state.currentInputFieldValue.length > 0) {
             if (this.state.currentInputFieldValue !== prevState.currentInputFieldValue) {
                 BooksAPI.search(this.state.currentInputFieldValue).then(results => this.setState({
@@ -129,32 +134,38 @@ class BooksApp extends React.Component {
 
 
   render() {
-    console.log(this.state.showSearchPage)
+
     return (
 
-      <div className="app">
-
-          <SearchBar searchBooks={this.searchBooks} fieldValue={this.props.currentInputFieldValue}/>
 
 
+
+
+          <body>
+          <div className="app">
           <Route exact path='/' render={() => (<MainShelf changeShelf={this.changeShelf}
                                                    searchmode={this.state.showSearchPage}
                                                    CurBooks={this.state.currentlyReading}
                                                    HaveBooks={this.state.read}
                                                    WantBooks={this.state.wantToRead}
                                                    searchPageToggle={this.searchPageToggle}
+                                                   clearResults={this.clearSearchResults}
           />)}/>
+
           <Route path='/search' render={() => (<SearchView
               books={this.state.searchQuery}
               addToShelf={this.addToShelf}
               searchMode={this.state.showSearchPage}
-              onNavigate={this.searchPageToggle}
               searchPageToggle={this.searchPageToggle}
+              searchBooks={this.searchBooks}
+              fieldValue={this.state.currentInputFieldValue}
           />)}/>
+          </div>
+
+          </body>
 
 
 
-      </div>
     )
 
   }

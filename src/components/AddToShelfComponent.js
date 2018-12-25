@@ -6,22 +6,23 @@ class AddToShelf extends React.Component {
 
         return(
 
-            <div>
-                <span>Add To My Shelf</span>
+            <div className="change-submit-form" onMouseLeave={this.props.showOrHide}>
+
                 <form onSubmit={this.props.addToShelf}>
                     <input name="ToShelf" type="hidden" value={"currentlyReading"}/>
                     <input name="BookID" type="hidden" value={this.props.book.id}/>
-                    <button>Currently Reading</button>
+                    <input type="submit" value="Currently Reading"/>
                 </form>
                 <form onSubmit={this.props.addToShelf}>
                     <input name="ToShelf" type="hidden" value={"read"}/>
                     <input name="BookID" type="hidden" value={this.props.book.id}/>
-                    <button>Have Read Already</button>
+                    <input name="Already Read" value="Already Read" type="submit"/>
+
                 </form>
                 <form onSubmit={this.props.addToShelf}>
                     <input name="ToShelf" type="hidden" value={"wantToRead"}/>
                     <input name="BookID" type="hidden" value={this.props.book.id}/>
-                    <button>Want To Read It</button>
+                    <input type="submit" value="Want to Read"/>
                 </form>
 
             </div>
