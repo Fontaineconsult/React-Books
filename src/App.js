@@ -23,12 +23,16 @@ class BooksApp extends React.Component {
         this.changeShelf = (event) => {
 
             event.preventDefault();
-
+            console.log("EVENT", event.target)
             let CurrentShelf = event.target[0].value;
-            let ShelfToMoveTo = event.target[1].value;
-            let BookID = event.target[2].value;
+            let BookID = event.target[1].value;
+            let ShelfToMoveTo = event.target[2].value;
+
             let CurrentBook = this.state.books.filter(function(el) {return el.id === BookID});
 
+
+
+            console.log(CurrentShelf, ShelfToMoveTo, BookID )
             CurrentBook[0].shelf = ShelfToMoveTo;
 
             if (CurrentShelf !== ShelfToMoveTo) {
@@ -37,7 +41,6 @@ class BooksApp extends React.Component {
 
                     [CurrentShelf]: prevState[CurrentShelf].filter(book => {return book.id !== BookID}),
                     [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]],
-
                 }));
             }
 
@@ -45,9 +48,9 @@ class BooksApp extends React.Component {
 
         this.addToShelf = (event) => {
             event.preventDefault();
+            let BookID = event.target[0].value;
+            let ShelfToMoveTo = event.target[1].value;
 
-            let ShelfToMoveTo = event.target[0].value;
-            let BookID = event.target[1].value;
 
             let CurrentBook = this.state.searchQuery.filter(function(el) {return el.id === BookID});
 
@@ -154,11 +157,13 @@ class BooksApp extends React.Component {
 
           <Route path='/search' render={() => (<SearchView
               books={this.state.searchQuery}
+              currentBookShelf={this.state.books}
               addToShelf={this.addToShelf}
               searchMode={this.state.showSearchPage}
               searchPageToggle={this.searchPageToggle}
               searchBooks={this.searchBooks}
               fieldValue={this.state.currentInputFieldValue}
+              clearResults={this.clearSearchResults}
           />)}/>
           </div>
 

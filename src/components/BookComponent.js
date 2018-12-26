@@ -20,7 +20,7 @@ class BookComponent extends React.Component {
     }
 
     render() {
-            console.log(this.props)
+
             return(
                 <li>
                     <div className="book">
@@ -31,10 +31,10 @@ class BookComponent extends React.Component {
                                 <ChangeShelf book={this.props.book} changeShelf={this.props.changeShelf} showOrHide={this.showOrHideChanger}/>
                             )}
                             {this.props.searchMode === true && this.state.showChanger === true && (
-                                <AddToShelf book={this.props.book} addToShelf={this.props.addToShelf} showOrHide={this.showOrHideChanger}/>
+                                <AddToShelf book={this.props.book} addToShelf={this.props.addToShelf} currentBookShelf={this.props.currentBookShelf} showOrHide={this.showOrHideChanger}/>
                             )}
 
-                            <div onMouseEnter={this.showOrHideChanger} className="book-shelf-changer"/>
+                            <div onClick={this.showOrHideChanger} className="book-shelf-changer"/>
                         </div>
                         <div className="book-title">{this.props.book.title}</div>
                         {this.props.book.authors !== undefined && (this.props.book.authors.map((author) => (<div className="book-authors">{author}</div>)))}
