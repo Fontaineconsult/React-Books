@@ -9,6 +9,7 @@ class CurrentlyReading extends React.Component {
                 <div className="bookshelf-books" >
                     <ol className="books-grid">
                     {this.props.curbooks.map((book) => <BookComponent
+                        key = {book.id}
                         changeShelf={this.props.changeShelf}
                         book={book}
                         searchMode={this.props.searchMode}

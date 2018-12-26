@@ -11,6 +11,7 @@ class WantToRead extends React.Component {
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                 {this.props.WantBooks.map((book) => <BookComponent
+                    key = {book.id}
                     changeShelf={this.props.changeShelf}
                     book={book}
                     searchMode={this.props.searchMode}

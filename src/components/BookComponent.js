@@ -37,7 +37,7 @@ class BookComponent extends React.Component {
                             <div onClick={this.showOrHideChanger} className="book-shelf-changer"/>
                         </div>
                         <div className="book-title">{this.props.book.title}</div>
-                        {this.props.book.authors !== undefined && (this.props.book.authors.map((author) => (<div className="book-authors">{author}</div>)))}
+                        {this.props.book.authors !== undefined && (this.props.book.authors.map((author) => (<div key={author} className="book-authors">{author}</div>)))}
 
                     </div>
                 </li>

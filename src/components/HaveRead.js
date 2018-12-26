@@ -11,6 +11,7 @@ class HaveRead extends React.Component {
 
                     <ol className="books-grid">
                     {this.props.HaveBooks.map((book) => (<BookComponent
+                        key = {book.id}
                         changeShelf={this.props.changeShelf}
                         book={book}
                         searchMode={this.props.searchMode}

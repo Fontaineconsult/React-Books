@@ -26,7 +26,7 @@ class SearchView extends React.Component {
                 </div>
                 <div className="search-books-results">
                     <div className="books-grid">
-                    {Array.isArray(this.props.books) === true && (this.props.books.map(book => <BookComponent book={book} currentBookShelf={this.props.currentBookShelf} addToShelf={this.props.addToShelf} searchMode={this.props.searchMode} /> ))}
+                    {Array.isArray(this.props.books) === true && (this.props.books.map(book => <BookComponent book={book} key={book.id} currentBookShelf={this.props.currentBookShelf} addToShelf={this.props.addToShelf} searchMode={this.props.searchMode} /> ))}
                     {Array.isArray(this.props.books) === true & this.props.books.length === 0 && (
                         <span>Search for books to add to your reading lists</span>
                     )}

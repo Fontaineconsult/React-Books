@@ -144,7 +144,7 @@ class BooksApp extends React.Component {
 
 
 
-          <body>
+
           <div className="app">
           <Route exact path='/' render={() => (<MainShelf changeShelf={this.changeShelf}
                                                    searchmode={this.state.showSearchPage}
@@ -167,7 +167,7 @@ class BooksApp extends React.Component {
           />)}/>
           </div>
 
-          </body>
+
 
 
 
