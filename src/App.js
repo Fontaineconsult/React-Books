@@ -23,7 +23,6 @@ class BooksApp extends React.Component {
         this.changeShelf = (event) => {
 
             event.preventDefault();
-            console.log("EVENT", event.target)
             let CurrentShelf = event.target[0].value;
             let BookID = event.target[1].value;
             let ShelfToMoveTo = event.target[2].value;
@@ -32,16 +31,15 @@ class BooksApp extends React.Component {
 
 
 
-            console.log(CurrentShelf, ShelfToMoveTo, BookID )
             CurrentBook[0].shelf = ShelfToMoveTo;
 
             if (CurrentShelf !== ShelfToMoveTo) {
-                BooksAPI.update(CurrentBook[0], ShelfToMoveTo);
-                this.setState(prevState => ({
+                BooksAPI.update(CurrentBook[0], ShelfToMoveTo).then(this.setState(prevState => ({
 
                     [CurrentShelf]: prevState[CurrentShelf].filter(book => {return book.id !== BookID}),
                     [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]],
-                }));
+                })));
+
             }
 
         };
@@ -51,31 +49,45 @@ class BooksApp extends React.Component {
             let BookID = event.target[0].value;
             let ShelfToMoveTo = event.target[1].value;
 
-
             let CurrentBook = this.state.searchQuery.filter(function(el) {return el.id === BookID});
 
             let doesBookExist = this.state.books.find(function(CurrentBook) {return CurrentBook.id === BookID});
 
             if (doesBookExist === undefined) {
                 Object.assign(CurrentBook[0], {shelf: ShelfToMoveTo});
-                this.setState(prevState => ({
-                    books: [...prevState.books, CurrentBook[0]],
-                    [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]]
-                }));
-                BooksAPI.update(CurrentBook[0], ShelfToMoveTo);
+
+                BooksAPI.update(CurrentBook[0], ShelfToMoveTo).then(
+                    this.setState(prevState => ({
+                        books: [...prevState.books, CurrentBook[0]],
+                        [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]]
+                    }))
+
+                );
+
+            } else {
+                let doesBookExistIndex = this.state.books.findIndex(function(CurrentBook) {return CurrentBook.id === BookID})
+                let currentShelf = doesBookExist.shelf;
+                if (currentShelf !== ShelfToMoveTo) {
+                    CurrentBook[0].shelf = ShelfToMoveTo
+                    let newBooksState = this.state.books
+                    newBooksState.splice(doesBookExistIndex, 1, CurrentBook[0])
+
+                    this.setState(prevState =>({
+
+                        [currentShelf]: prevState[currentShelf].filter(book => {return book.id !== BookID}),
+                        [ShelfToMoveTo]: [... prevState[ShelfToMoveTo], CurrentBook[0]],
+                        books: newBooksState
+
+
+                    }));
+                    BooksAPI.update(doesBookExist, ShelfToMoveTo);
+                }
 
             }
-
-
-
-
-
-
-
         };
 
         this.searchBooks = (string) => {
-            console.log(string, string.length);
+
 
             if (string.length > 0){
 
@@ -110,7 +122,7 @@ class BooksApp extends React.Component {
     }
 
   componentWillMount() {
-      console.log("GettingBooks")
+
       BooksAPI.getAll().then((books) => this.setState({
           books: books,
           currentlyReading: books.filter(function(el) {return el.shelf === "currentlyReading"}),
@@ -121,7 +133,7 @@ class BooksApp extends React.Component {
   }
 
   componentDidUpdate(nextProps, prevState) {
-        console.log(this.state.currentInputFieldValue)
+
         if (this.state.currentInputFieldValue.length > 0) {
             if (this.state.currentInputFieldValue !== prevState.currentInputFieldValue) {
                 BooksAPI.search(this.state.currentInputFieldValue).then(results => this.setState({
@@ -131,18 +143,12 @@ class BooksApp extends React.Component {
             }
         }
 
-
-
   }
 
 
   render() {
 
     return (
-
-
-
-
 
 
           <div className="app">
@@ -153,6 +159,7 @@ class BooksApp extends React.Component {
                                                    WantBooks={this.state.wantToRead}
                                                    searchPageToggle={this.searchPageToggle}
                                                    clearResults={this.clearSearchResults}
+
           />)}/>
 
           <Route path='/search' render={() => (<SearchView
@@ -166,9 +173,6 @@ class BooksApp extends React.Component {
               clearResults={this.clearSearchResults}
           />)}/>
           </div>
-
-
-
 
 
     )
