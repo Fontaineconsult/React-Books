@@ -3,7 +3,7 @@ import BookComponent from "./BookComponent";
 
 class HaveRead extends React.Component {
     render(){
-        console.log("HAVEREADPROPS", this.props)
+
         return(
             <div className="bookshelf">
                 <div className="bookshelf-title"><h1>Already Read</h1></div>
