@@ -2,6 +2,7 @@ import React from 'react'
 import ChangeShelf from './ChangeShelfComponent'
 import AddToShelf from './AddToShelfComponent'
 
+
 class BookComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -27,6 +28,7 @@ class BookComponent extends React.Component {
                         <div className="book-top">
 
                             {this.props.book.imageLinks !== undefined && (<img className="book-cover" alt="Small Thumb" src={this.props.book.imageLinks.thumbnail}/>)}
+                            {this.props.book.imageLinks === undefined && (<img className="book-cover" alt="No image" src={window.location.origin + "/images/no_image.png"}/>)}
                             {this.props.searchMode === false && this.state.showChanger === true && (
                                 <ChangeShelf book={this.props.book} changeShelf={this.props.changeShelf} showOrHide={this.showOrHideChanger}/>
                             )}

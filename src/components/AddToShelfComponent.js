@@ -19,14 +19,26 @@ class AddToShelf extends React.Component {
 
 
     }
+
     handleSubmit(event){
         event.preventDefault()
         this.props.addToShelf(event)
     }
 
+    componentWillReceiveProps(nextProps, nextContext) {
+
+        let searchedBookId = this.props.book.id
+        let doesbookExist = nextProps.currentBookShelf.filter( function(currentBook) {return currentBook.id === searchedBookId } )
+
+
+        this.setState({inShelf: doesbookExist[0].shelf})
+    }
+
+
+
     componentWillMount() {
 
-        console.log(this.props.book.id, this.props.currentBookShelf);
+
         let searchedBookId = this.props.book.id
 
         let doesbookExist = this.props.currentBookShelf.filter( function(currentBook) {return currentBook.id === searchedBookId } )
@@ -39,11 +51,7 @@ class AddToShelf extends React.Component {
 
         }
 
-
-
     }
-
-
 
 
     render() {
